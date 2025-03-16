@@ -4,7 +4,8 @@ using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
 using CrashKonijn.Goap.Runtime;
 using Rim_World.Behaviours;
-using Rim_World.GameItems;
+using Rim_World.Game;
+using Rim_World.Game.Items;
 using Rim_World.Interfaces;
 
 namespace Rim_World.Actions
@@ -13,11 +14,11 @@ namespace Rim_World.Actions
     public class CreateItemAction<T> : GoapActionBase<CreateItemAction<T>.Data, CreateItemAction<T>.Props>, IInjectable
         where T : ItemBehaviour, ICreatable
     {
-        private ItemFactoryBehaviour itemFactory;
+        private ItemBlueprintManager blueprintManager;
         
         public void Inject(GoapInjectorBehaviour injector)
         {
-            this.itemFactory = injector.itemFactory;
+            this.blueprintManager = injector.itemBlueprintManager;
         }
         
         // This method is called when the action is created
@@ -45,10 +46,9 @@ namespace Rim_World.Actions
         // This method is optional and can be removed
         public override void BeforePerform(IMonoAgent agent, Data data)
         {
-            for (int i = 0; i < this.Properties.requiredWood; i++)
+            if (this.Properties.requiredWood > 0)
             {
-                var wood = data.AgentInventory.Get<Wood>().FirstOrDefault();
-                data.AgentInventory.Remove(wood);
+                data.AgentInventory.Remove<Wood>(this.Properties.requiredWood);
             }
         }
 
@@ -68,8 +68,12 @@ namespace Rim_World.Actions
         // This method is optional and can be removed
         public override void Complete(IMonoAgent agent, Data data)
         {
-            var item = this.itemFactory.Instantiate<T>();
-            item.transform.position = agent.transform.position;
+            Blueprint completeBlueprint = this.blueprintManager.Filtered<T>().FirstOrDefault();
+            if (completeBlueprint == null)
+            {
+                return;
+            }
+            completeBlueprint.Spawn();
         }
 
         // This method is called when the action is stopped

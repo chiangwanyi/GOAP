@@ -1,35 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Rim_World.Game.Items;
 using Rim_World.Interfaces;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Rim_World.Behaviours
 {
     public class AgentInventoryBehaviour : MonoBehaviour
     {
-        private List<IHoldable> items = new();
+        public string agentName;
+        public int woodCount;
         
-        public T[] Get<T>()
-        {
-            return this.items.Where(x => x is T).Cast<T>().ToArray();
-        }
-        
-        public void Remove<T>(T item)
+        public void Remove<T>(int count)
             where T : IHoldable
         {
-            this.items.Remove(item);
-            
-            if (item == null || item.gameObject == null)
-                return;
-            
-            // 需要保留物品但将其从当前逻辑中移除，设置 parent = null 是一种常见的做法。
-            item.gameObject.transform.parent = null;
+            if (typeof(T) == typeof(Wood) && this.woodCount >= count)
+            {
+                this.woodCount -= count;
+            } 
         }
         
-        public int Count<T>()
-            where T : IHoldable
+        public int Count<T>() where T : IHoldable
         {
-            return this.items.Count(x => x is T);
+            if (typeof(T) == typeof(Wood))
+            {
+                return this.woodCount;
+            }
+            return 0;
         }
     }
 }

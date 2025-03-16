@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Rim_World.GameSources
+namespace Rim_World.Game.Sources
 {
     public class WorkbenchSource : MonoBehaviour
     {

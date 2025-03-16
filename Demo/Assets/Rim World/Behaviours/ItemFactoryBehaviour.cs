@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Rim_World.Behaviours
             var item = this.items.FirstOrDefault(x => x is T);
 
             if (item == null)
-                throw new System.Exception($"Item of type {typeof(T).Name} not found in factory");
+                throw new Exception($"Item of type {typeof(T).Name} not found in factory");
             
             // Instantiate the item
             var instance = Instantiate(item);
