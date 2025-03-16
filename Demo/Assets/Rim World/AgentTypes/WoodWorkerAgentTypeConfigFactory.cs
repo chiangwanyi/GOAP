@@ -38,13 +38,16 @@ namespace Rim_World.AgentTypes
                     .AddCondition<IsHolding<Wood>>(Comparison.GreaterThanOrEqual, 10);
 
                 // Sensor: 最近的箱子蓝图点
-                capability.AddTargetSensor<ClosestBlueprintSensor<Box>>()
+                capability.AddTargetSensor<BestBlueprintSensor<Box>>()
                     // Target: 最近箱子蓝图点
                     .SetTarget<ClosestBlueprintTarget<Box>>();
                 
                 // Sensor: Agent手持木头的数量
                 capability.AddWorldSensor<IsHoldingSensor<Wood>>()
                     .SetKey<IsHolding<Wood>>();
+                
+                capability.AddWorldSensor<BlueprintSensor<Box>>()
+                    .SetKey<Blueprint<Box>>();
             });
             
             return builder.Build();

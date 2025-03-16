@@ -74,6 +74,7 @@ namespace Rim_World.Actions
                 return;
             }
             completeBlueprint.Spawn();
+            this.blueprintManager.Remove(completeBlueprint);
         }
 
         // This method is called when the action is stopped

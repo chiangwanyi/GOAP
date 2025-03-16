@@ -16,7 +16,8 @@ namespace Rim_World.Game
                 return;
             }
 
-            Instantiate(this.item, this.transform);
+            var behaviour = Instantiate(this.item, this.transform);
+            behaviour.transform.parent = null;
         }
     }
 }
